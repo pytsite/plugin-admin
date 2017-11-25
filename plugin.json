@@ -1,0 +1,30 @@
+{
+  "name": "admin",
+  "version": "1.0",
+  "description": {
+    "en": "Admin",
+    "ru": "Admin",
+    "uk": "Admin"
+  },
+  "url": "https://github.com/pytsite/plugin-admin",
+  "author": {
+    "name": "Alexander Shepetko",
+    "email": "a@shepetko.com",
+    "url": "https://shepetko.com"
+  },
+  "requires": {
+    "packages": [],
+    "plugins": [
+      "assetman",
+      "auth",
+      "form",
+      "font_awesome",
+      "hreflang",
+      "jquery",
+      "permissions",
+      "robots_txt",
+      "twitter_bootstrap",
+      "widget"
+    ]
+  }
+}
