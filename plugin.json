@@ -1,6 +1,6 @@
 {
   "name": "admin",
-  "version": "1.0",
+  "version": "1.1",
   "description": {
     "en": "Admin",
     "ru": "Admin",
@@ -17,10 +17,12 @@
     "plugins": [
       "assetman",
       "auth",
+      "auth_ui",
       "form",
       "font_awesome",
       "hreflang",
       "jquery",
+      "js_cookie",
       "permissions",
       "robots_txt",
       "twitter_bootstrap",

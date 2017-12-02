@@ -3,6 +3,7 @@
 # Public API
 from . import _sidebar as sidebar, _navbar as navbar
 from ._api import render, render_form, base_path
+from ._controllers import AdminAccessFilterController
 
 __author__ = 'Alexander Shepetko'
 __email__ = 'a@shepetko.com'
@@ -13,7 +14,7 @@ def _init():
     """Init wrapper
     """
     from pytsite import tpl, lang, router
-    from plugins import assetman, permissions, robots_txt
+    from plugins import assetman, permissions, robots_txt, auth_ui
     from . import _eh, _controllers
 
     bp = base_path()
@@ -44,7 +45,7 @@ def _init():
     permissions.define_permission('admin.use', 'admin@use_admin_panel', 'app')
 
     # Dashboard route
-    router.handle(_controllers.Dashboard(), bp, 'admin@dashboard')
+    router.handle(_controllers.Dashboard, bp, 'admin@dashboard', filters=AdminAccessFilterController)
 
     # Tpl globals
     tpl.register_global('admin_base_path', bp)
