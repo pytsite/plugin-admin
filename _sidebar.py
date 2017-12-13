@@ -96,8 +96,8 @@ def add_menu(sid: str, mid: str, title: str, href: str = '#', icon: str = None, 
         'permissions': permissions
     }
 
-    _events.fire('admin.sidebar.add_menu', menu_data=menu_data)
-    _events.fire('admin.sidebar.add_menu.{}.{}'.format(sid, mid), menu_data=menu_data)
+    _events.fire('admin.sidebar@add_menu', menu_data=menu_data)
+    _events.fire('admin.sidebar@add_menu.{}.{}'.format(sid, mid), menu_data=menu_data)
 
     _menus[sid].append(menu_data)
 
