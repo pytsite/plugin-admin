@@ -1,36 +1,46 @@
 """PytSite Admin Plugin
 """
-# Public API
-from . import _sidebar as sidebar, _navbar as navbar
-from ._api import render, render_form, base_path
-from ._controllers import AdminAccessFilterController
-
 __author__ = 'Alexander Shepetko'
 __email__ = 'a@shepetko.com'
 __license__ = 'MIT'
 
+from pytsite import plugman as _plugman
 
-def _init():
-    """Init wrapper
+# Public API
+if _plugman.is_installed(__name__):
+    from . import _sidebar as sidebar, _navbar as navbar
+    from ._api import render, render_form, base_path
+    from ._controllers import AdminAccessFilterController
+
+
+def plugin_load():
+    from pytsite import lang
+    from plugins import assetman
+
+    # Resources
+    lang.register_package(__name__)
+    assetman.register_package(__name__)
+
+    # Assetman tasks
+    assetman.t_js(__name__)
+    assetman.t_css(__name__)
+    assetman.t_less(__name__)
+
+    # JS modules
+    assetman.js_module('pytsite-admin-lte', __name__ + '@AdminLTE/js/app', True, ['jquery', 'twitter-bootstrap'])
+
+
+def plugin_load_uwsgi():
+    """Hook
     """
-    from pytsite import tpl, lang, router
-    from plugins import assetman, permissions, robots_txt, auth_ui
+    from pytsite import tpl, router
+    from plugins import assetman, permissions, robots_txt
     from . import _eh, _controllers
 
     bp = base_path()
 
     # Resources
-    lang.register_package(__name__)
     tpl.register_package(__name__)
-    assetman.register_package(__name__)
-
-    # JS modules
-    assetman.js_module('pytsite-admin-lte', __name__ + '@AdminLTE/js/app', True, ['jquery', 'twitter-bootstrap'])
-
-    # Assetman tasks
-    assetman.t_js(__name__ + '@**')
-    assetman.t_css(__name__ + '@**')
-    assetman.t_less(__name__ + '@**')
 
     # Assets
     assetman.preload('font-awesome', True, path_prefix=bp)
@@ -57,7 +67,3 @@ def _init():
 
     # Event handlers
     router.on_dispatch(_eh.router_dispatch)
-
-
-# Initialization
-_init()
