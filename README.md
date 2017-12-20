@@ -4,12 +4,17 @@
 ## Changelog
 
 
-### 1.2.1 (2017-12-02)
+### 1.2.2 (2017-12-20)
+
+Assets building added.
+
+
+### 1.2.1 (2017-12-13)
 
 Events names fixed.
 
 
-### 1.2 (2017-12-02)
+### 1.2 (2017-12-13)
 
 Support for PytSite-7.0.
 

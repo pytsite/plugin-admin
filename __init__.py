@@ -67,3 +67,11 @@ def plugin_load_uwsgi():
 
     # Event handlers
     router.on_dispatch(_eh.router_dispatch)
+
+
+def plugin_install():
+    from plugins import assetman
+
+    plugin_load()
+    assetman.build(__name__)
+    assetman.build_translations()
