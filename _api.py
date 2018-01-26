@@ -1,12 +1,22 @@
 """Admin Admin Plugin API Functions
 """
-from pytsite import tpl as _tpl, http as _http, reg as _reg, router as _router, package_info as _package_info
-from plugins import assetman as _assetman, widget as _widget, auth as _auth, form as _form
-from . import _sidebar
-
 __author__ = 'Alexander Shepetko'
 __email__ = 'a@shepetko.com'
 __license__ = 'MIT'
+
+from typing import Union as _Union, Dict as _Dict
+from pytsite import reg as _reg, html as _html, router as _router, http as _http
+from plugins import auth as _auth
+from . import _error
+from ._theme import Theme as _Theme
+from ._navbar import NavBar as _NavBar
+from ._sidebar import SideBar as _SideBar
+
+navbar = _NavBar()
+sidebar = _SideBar()
+_themes = {}  # type: _Dict[str, _Theme]
+_fallback_theme_name = None  # type: str
+_paths_permissions = {}
 
 
 def base_path() -> str:
@@ -15,27 +25,71 @@ def base_path() -> str:
     return _reg.get('admin.base_path', '/admin')
 
 
-def render(content: str) -> str:
+def register_theme(theme: _Theme):
+    """Register a theme
+    """
+    global _themes, _fallback_theme_name
+
+    if theme.name in _themes:
+        raise _error.ThemeAlreadyRegistered(theme.name)
+
+    _themes[theme.name] = theme
+
+    if not _fallback_theme_name:
+        _fallback_theme_name = theme.name
+
+
+def render(content: _Union[str, _html.Element]) -> str:
     """Render admin page with content.
     """
-    if not _auth.get_current_user().has_permission('admin.use'):
-        raise _http.error.Forbidden()
+    if not _themes:
+        raise _error.NoThemesRegistered()
 
-    return _tpl.render('admin@html', {
-        'admin_sidebar': _sidebar.render(),
-        'admin_language_nav': _widget.select.LanguageNav('admin-language-nav', dropdown=True),
-        'content': content,
-        'core_name': _package_info.name('pytsite'),
-        'core_url': _package_info.url('pytsite'),
-        'core_version': _package_info.version('pytsite'),
-        'sidebar_collapsed': _router.request().cookies.get('adminSidebarCollapsed') is not None,
-    })
+    theme_name = _reg.get('admin.theme', _fallback_theme_name)
+    try:
+        theme = _themes[theme_name]
+    except KeyError:
+        raise _error.ThemeNotRegistered(theme_name)
+
+    current_path = _router.current_path(True)
+
+    if current_path == base_path():
+        return theme.render(navbar, sidebar, content)
+
+    for path in _paths_permissions:
+        if current_path.startswith(path):
+            if not check_path_permissions(path):
+                raise _http.error.Forbidden()
+
+            return theme.render(navbar, sidebar, content)
+
+    # Path's permissions is not defined
+    raise _http.error.Forbidden()
 
 
-def render_form(frm: _form.Form) -> str:
-    """Render a form within the admin page.
-    """
-    _assetman.preload('admin@css/admin-form.css')
-    frm.css += ' admin-form'
+def add_path_permissions(path: str, roles: _Union[str, list, tuple] = '*', permissions: _Union[str, list, tuple] = '*'):
+    if path in _paths_permissions:
+        raise ValueError("Permissions for path '{}' is already registered")
 
-    return render(_tpl.render('admin@form', {'form': frm}))
+    _paths_permissions[path] = {
+        'roles': roles,
+        'permissions': permissions,
+    }
+
+
+def check_path_permissions(path: str) -> bool:
+    user = _auth.get_current_user()
+
+    if path not in _paths_permissions or user.is_anonymous:
+        return False
+
+    perm = _paths_permissions[path]
+
+    if perm['roles'] and perm['roles'] != '*' and user.has_role(perm['roles']):
+        return True
+    elif perm['permissions'] and perm['permissions'] != '*' and user.has_permission(perm['permissions']):
+        return True
+    elif perm['roles'] == '*' and perm['permissions'] == '*':
+        return True
+    else:
+        return False

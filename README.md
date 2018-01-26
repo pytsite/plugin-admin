@@ -4,6 +4,13 @@
 ## Changelog
 
 
+### 1.3 (2018-01-26)
+
+- Refactored.
+- Theming added.
+- AdminLTE theme moved to separate plugin.
+
+
 ### 1.2.3 (2017-12-21)
 
 Init code refactored.

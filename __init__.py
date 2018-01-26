@@ -4,70 +4,39 @@ __author__ = 'Alexander Shepetko'
 __email__ = 'a@shepetko.com'
 __license__ = 'MIT'
 
-from pytsite import plugman as _plugman
-
 # Public API
-if _plugman.is_installed(__name__):
-    from . import _sidebar as sidebar, _navbar as navbar
-    from ._api import render, render_form, base_path
-    from ._controllers import AdminAccessFilterController
-
-
-def _register_assetman_resources():
-    from plugins import assetman
-
-    if not assetman.is_package_registered(__name__):
-        assetman.register_package(__name__)
-        assetman.t_js(__name__)
-        assetman.t_css(__name__)
-        assetman.t_less(__name__)
-        assetman.js_module('pytsite-admin-lte', __name__ + '@AdminLTE/js/app', True, ['jquery', 'twitter-bootstrap'])
-
-    return assetman
-
-
-def plugin_install():
-    _register_assetman_resources().build(__name__)
+from ._api import base_path, render, register_theme, navbar, sidebar
+from ._theme import Theme
+from ._navbar import NavBar
+from ._sidebar import SideBar
 
 
 def plugin_load():
+    """Hook
+    """
     from pytsite import lang
 
+    # Resources
     lang.register_package(__name__)
-    _register_assetman_resources()
 
 
 def plugin_load_uwsgi():
     """Hook
     """
     from pytsite import tpl, router
-    from plugins import assetman, permissions, robots_txt
-    from . import _eh, _controllers
+    from plugins import robots_txt
+    from . import _eh, _controllers, _api
 
     bp = base_path()
 
-    # Resources
-    tpl.register_package(__name__)
-
-    # Assets
-    assetman.preload('font-awesome', True, path_prefix=bp)
-    assetman.preload('twitter-bootstrap', True, path_prefix=bp)
-    assetman.preload('admin@AdminLTE/css/AdminLTE.css', True, path_prefix=bp)
-    assetman.preload('admin@AdminLTE/css/skins/skin-blue.css', True, path_prefix=bp)
-    assetman.preload('admin@css/custom.css', True, path_prefix=bp)
-    assetman.preload('admin@css/admin-form.css', True, path_prefix=bp)
-    assetman.preload('admin@js/pytsite-admin.js', True, path_prefix=bp)
-
-    # Permissions
-    permissions.define_permission('admin.use', 'admin@use_admin_panel', 'app')
+    # 'Miscellaneous' sidebar's section
+    sidebar.add_section('misc', 'admin@miscellaneous', 500)
 
     # Dashboard route
-    router.handle(_controllers.Dashboard, bp, 'admin@dashboard', filters=AdminAccessFilterController)
+    router.handle(_controllers.Dashboard, bp, 'admin@dashboard')
 
     # Tpl globals
     tpl.register_global('admin_base_path', bp)
-
-    sidebar.add_section('misc', 'admin@miscellaneous', 500)
 
     # robots.txt rules
     robots_txt.disallow(bp + '/')
