@@ -4,6 +4,11 @@
 ## Changelog
 
 
+### 1.3.1 (2018-01-29)
+
+Missing authentication step fixed.
+
+
 ### 1.3 (2018-01-26)
 
 - Refactored.

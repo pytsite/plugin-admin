@@ -24,7 +24,7 @@ def plugin_load_uwsgi():
     """Hook
     """
     from pytsite import tpl, router
-    from plugins import robots_txt
+    from plugins import auth_ui, robots_txt
     from . import _eh, _controllers, _api
 
     bp = base_path()
@@ -33,7 +33,7 @@ def plugin_load_uwsgi():
     sidebar.add_section('misc', 'admin@miscellaneous', 500)
 
     # Dashboard route
-    router.handle(_controllers.Dashboard, bp, 'admin@dashboard')
+    router.handle(_controllers.Dashboard, bp, 'admin@dashboard', filters=auth_ui.AuthFilterController)
 
     # Tpl globals
     tpl.register_global('admin_base_path', bp)
