@@ -5,6 +5,7 @@ __email__ = 'a@shepetko.com'
 __license__ = 'MIT'
 
 from typing import Union as _Union, Dict as _Dict
+import re as _re
 from pytsite import reg as _reg, html as _html, router as _router, http as _http
 from plugins import auth as _auth
 from . import _error
@@ -16,7 +17,7 @@ navbar = _NavBar()
 sidebar = _SideBar()
 _themes = {}  # type: _Dict[str, _Theme]
 _fallback_theme_name = None  # type: str
-_paths_permissions = {}
+_permissions = []
 
 
 def base_path() -> str:
@@ -56,40 +57,38 @@ def render(content: _Union[str, _html.Element]) -> str:
     if current_path == base_path():
         return theme.render(navbar, sidebar, content)
 
-    for path in _paths_permissions:
-        if current_path.startswith(path):
-            if not check_path_permissions(path):
-                raise _http.error.Forbidden()
-
-            return theme.render(navbar, sidebar, content)
+    if check_permissions(current_path):
+        return theme.render(navbar, sidebar, content)
 
     # Path's permissions is not defined
     raise _http.error.Forbidden()
 
 
-def add_path_permissions(path: str, roles: _Union[str, list, tuple] = '*', permissions: _Union[str, list, tuple] = '*'):
-    if path in _paths_permissions:
-        raise ValueError("Permissions for path '{}' is already registered")
-
-    _paths_permissions[path] = {
+def define_permissions(path: str, roles: _Union[str, list, tuple] = '*', permissions: _Union[str, list, tuple] = '*'):
+    """Define permissions for a path
+    """
+    _permissions.append({
+        're': _re.compile(path),
         'roles': roles,
         'permissions': permissions,
-    }
+    })
 
 
-def check_path_permissions(path: str) -> bool:
+def check_permissions(path: str) -> bool:
     user = _auth.get_current_user()
 
-    if path not in _paths_permissions or user.is_anonymous:
+    if user.is_anonymous:
         return False
 
-    perm = _paths_permissions[path]
+    for item in _permissions:
+        if not item['re'].match(path):
+            continue
 
-    if perm['roles'] and perm['roles'] != '*' and user.has_role(perm['roles']):
-        return True
-    elif perm['permissions'] and perm['permissions'] != '*' and user.has_permission(perm['permissions']):
-        return True
-    elif perm['roles'] == '*' and perm['permissions'] == '*':
-        return True
-    else:
-        return False
+        if item['roles'] != '*' and user.has_role(item['roles']):
+            return True
+        elif item['permissions'] != '*' and user.has_permission(item['permissions']):
+            return True
+        elif item['roles'] == '*' and item['permissions'] == '*':
+            return True
+
+    return False

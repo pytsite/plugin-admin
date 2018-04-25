@@ -93,7 +93,7 @@ class SideBar:
         }
 
         # Add data to permissions store
-        _api.add_path_permissions(path, roles, permissions)
+        _api.define_permissions(path, roles, permissions)
 
         _events.fire('admin@sidebar_add_menu', menu_data=menu_data)
         _events.fire('admin@sidebar_add_menu.{}.{}'.format(sid, mid), menu_data=menu_data)
@@ -130,7 +130,7 @@ class SideBar:
             # Permission to view menu
             menus[section['sid']] = []
             for menu in self._menus[section['sid']].copy():
-                if _api.check_path_permissions(menu['path']):
+                if _api.check_permissions(menu['path']):
                     menu['active'] = bool(current_path != base_path and menu['path'].endswith(current_path))
                     menus[section['sid']].append(menu)
 

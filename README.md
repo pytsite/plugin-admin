@@ -4,6 +4,12 @@
 ## Changelog
 
 
+### 1.4 (2018-04-25)
+
+- New API function adde: `define_permissions()`.
+- Paths permissions processing fixed.
+
+
 ### 1.3.1 (2018-01-29)
 
 Missing authentication step fixed.
