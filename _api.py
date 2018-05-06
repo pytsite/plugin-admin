@@ -64,7 +64,7 @@ def render(content: _Union[str, _html.Element]) -> str:
     raise _http.error.Forbidden()
 
 
-def define_permissions(path: str, roles: _Union[str, list, tuple] = '*', permissions: _Union[str, list, tuple] = '*'):
+def define_permissions(path: str, roles: _Union[str, list, tuple], permissions: _Union[str, list, tuple]):
     """Define permissions for a path
     """
     _permissions.append({
@@ -84,11 +84,14 @@ def check_permissions(path: str) -> bool:
         if not item['re'].match(path):
             continue
 
-        if item['roles'] != '*' and user.has_role(item['roles']):
+        roles = item['roles']
+        perms = item['permissions']
+
+        if roles is not None and roles != '*' and user.has_role(roles):
             return True
-        elif item['permissions'] != '*' and user.has_permission(item['permissions']):
+        elif perms is not None and perms != '*' and user.has_permission(perms):
             return True
-        elif item['roles'] == '*' and item['permissions'] == '*':
+        elif roles == '*' and perms == '*':
             return True
 
     return False

@@ -4,6 +4,11 @@
 ## Changelog
 
 
+### 1.4.1 (2018-05-06)
+
+Permissions checking issue fixed.
+
+
 ### 1.4 (2018-04-25)
 
 - New API function adde: `define_permissions()`.
