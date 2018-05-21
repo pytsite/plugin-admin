@@ -5,7 +5,7 @@ __email__ = 'a@shepetko.com'
 __license__ = 'MIT'
 
 # Public API
-from ._api import base_path, render, register_theme, navbar, sidebar, define_permissions
+from ._api import base_path, render, register_theme, navbar, sidebar
 from ._theme import Theme
 from ._navbar import NavBar
 from ._sidebar import SideBar

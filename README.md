@@ -4,6 +4,11 @@
 ## Changelog
 
 
+### 1.5 (2018-05-21)
+
+Permissions checking now works only while sidebar rendering.
+
+
 ### 1.4.1 (2018-05-06)
 
 Permissions checking issue fixed.

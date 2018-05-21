@@ -4,9 +4,13 @@ __author__ = 'Alexander Shepetko'
 __email__ = 'a@shepetko.com'
 __license__ = 'MIT'
 
+import re as _re
 from typing import Union as _Union, Tuple as _Tuple
 from pytsite import util as _util, lang as _lang, events as _events, router as _router
+from plugins import auth as _auth
 from . import _api
+
+_permissions = []
 
 
 class SideBar:
@@ -14,6 +18,29 @@ class SideBar:
         self._sections = []
         self._menus = {}
         self._last_section_weight = 0
+
+    @staticmethod
+    def _check_permissions(path: str) -> bool:
+        user = _auth.get_current_user()
+
+        if user.is_anonymous:
+            return False
+
+        for item in _permissions:
+            if not item['re'].match(path):
+                continue
+
+            roles = item['roles']
+            perms = item['permissions']
+
+            if roles is not None and roles != '*' and user.has_role(roles):
+                return True
+            elif perms is not None and perms != '*' and user.has_permission(perms):
+                return True
+            elif roles == '*' and perms == '*':
+                return True
+
+        return False
 
     def get_section(self, sid: str) -> dict:
         """Get a section
@@ -93,7 +120,11 @@ class SideBar:
         }
 
         # Add data to permissions store
-        _api.define_permissions(path, roles, permissions)
+        _permissions.append({
+            're': _re.compile(path),
+            'roles': roles,
+            'permissions': permissions,
+        })
 
         _events.fire('admin@sidebar_add_menu', menu_data=menu_data)
         _events.fire('admin@sidebar_add_menu.{}.{}'.format(sid, mid), menu_data=menu_data)
@@ -130,7 +161,7 @@ class SideBar:
             # Permission to view menu
             menus[section['sid']] = []
             for menu in self._menus[section['sid']].copy():
-                if _api.check_permissions(menu['path']):
+                if self._check_permissions(menu['path']):
                     menu['active'] = bool(current_path != base_path and menu['path'].endswith(current_path))
                     menus[section['sid']].append(menu)
 
