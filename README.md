@@ -4,6 +4,11 @@
 ## Changelog
 
 
+### 1.6 (2018-06-01)
+
+Support of `pytsite-7.24`.
+
+
 ### 1.5 (2018-05-21)
 
 Permissions checking now works only while sidebar rendering.

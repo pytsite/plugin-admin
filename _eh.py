@@ -12,7 +12,7 @@ from . import _api
 def router_dispatch():
     """'pytsite.router.dispatch' event handler
     """
-    if _router.current_path(True).startswith(_api.base_path()):
+    if _router.current_path().startswith(_api.base_path()):
         # Alternate languages
         for lng in _lang.langs(False):
-            _hreflang.add(lng, _router.url(_router.current_path(), lang=lng))
+            _hreflang.add(lng, _router.current_url(True, lang=lng))
