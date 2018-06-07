@@ -1,6 +1,6 @@
 {
   "name": "admin",
-  "version": "1.6",
+  "version": "1.7",
   "description": {
     "en": "Admin",
     "ru": "Admin",
@@ -16,7 +16,7 @@
     "pytsite": ">=7.24",
     "plugins": [
       "auth",
-      "auth_ui",
+      "auth_ui>=3.5",
       "hreflang",
       "permissions",
       "robots_txt"

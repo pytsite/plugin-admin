@@ -33,7 +33,7 @@ def plugin_load_uwsgi():
     sidebar.add_section('misc', 'admin@miscellaneous', 500)
 
     # Dashboard route
-    router.handle(_controllers.Dashboard, bp, 'admin@dashboard', filters=auth_ui.AuthFilterController)
+    router.handle(_controllers.Dashboard, bp, 'admin@dashboard', filters=auth_ui.AuthFilter)
 
     # Tpl globals
     tpl.register_global('admin_base_path', bp)
