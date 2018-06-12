@@ -4,6 +4,11 @@
 ## Changelog
 
 
+### 1.7.1 (2018-06-12)
+
+Permissions checking issue fix.
+
+
 ### 1.7 (2018-06-07)
 
 Support of `auth_ui-3.5`.
