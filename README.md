@@ -4,9 +4,14 @@
 ## Changelog
 
 
+### 1.7.2 (2018-06-13)
+
+Language nevigation bar issue fixed.
+
+
 ### 1.7.1 (2018-06-12)
 
-Permissions checking issue fix.
+Permissions checking issue fixed.
 
 
 ### 1.7 (2018-06-07)

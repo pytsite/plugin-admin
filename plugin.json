@@ -1,6 +1,6 @@
 {
   "name": "admin",
-  "version": "1.7.1",
+  "version": "1.7.2",
   "description": {
     "en": "Admin",
     "ru": "Admin",
@@ -13,7 +13,7 @@
     "url": "https://shepetko.com"
   },
   "requires": {
-    "pytsite": ">=7.24",
+    "pytsite": ">=7.29",
     "plugins": [
       "auth",
       "auth_ui>=3.5",
