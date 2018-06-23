@@ -4,9 +4,14 @@
 ## Changelog
 
 
+### 1.7.3 (2018-06-23)
+
+Admin's home page permissions checking fixed.
+
+
 ### 1.7.2 (2018-06-13)
 
-Language nevigation bar issue fixed.
+Language navigation bar issue fixed.
 
 
 ### 1.7.1 (2018-06-12)
