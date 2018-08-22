@@ -1,6 +1,6 @@
 {
   "name": "admin",
-  "version": "1.7.3",
+  "version": "1.7.4",
   "description": {
     "en": "Admin",
     "ru": "Admin",
@@ -8,7 +8,7 @@
   },
   "url": "https://github.com/pytsite/plugin-admin",
   "author": {
-    "name": "Alexander Shepetko",
+    "name": "Oleksandr Shepetko",
     "email": "a@shepetko.com",
     "url": "https://shepetko.com"
   },
@@ -17,7 +17,6 @@
     "plugins": [
       "auth",
       "auth_ui>=3.5",
-      "hreflang",
       "permissions",
       "robots_txt"
     ]

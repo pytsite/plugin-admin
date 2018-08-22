@@ -1,6 +1,6 @@
 """PytSite Admin Plugin
 """
-__author__ = 'Alexander Shepetko'
+__author__ = 'Oleksandr Shepetko'
 __email__ = 'a@shepetko.com'
 __license__ = 'MIT'
 
@@ -25,7 +25,7 @@ def plugin_load_uwsgi():
     """
     from pytsite import tpl, router
     from plugins import auth_ui, robots_txt
-    from . import _eh, _controllers, _api
+    from . import _controllers, _api
 
     bp = base_path()
 
@@ -40,6 +40,3 @@ def plugin_load_uwsgi():
 
     # robots.txt rules
     robots_txt.disallow(bp + '/')
-
-    # Event handlers
-    router.on_dispatch(_eh.router_dispatch)

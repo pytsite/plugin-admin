@@ -4,6 +4,11 @@
 ## Changelog
 
 
+### 1.7.4 (2018-08-22)
+
+Removed unnecessary `hreflang` plugin usage.
+
+
 ### 1.7.3 (2018-06-23)
 
 Admin's home page permissions checking fixed.
