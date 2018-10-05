@@ -11,16 +11,7 @@ from ._navbar import NavBar
 from ._sidebar import SideBar
 
 
-def plugin_load():
-    """Hook
-    """
-    from pytsite import lang
-
-    # Resources
-    lang.register_package(__name__)
-
-
-def plugin_load_uwsgi():
+def plugin_load_wsgi():
     """Hook
     """
     from pytsite import tpl, router

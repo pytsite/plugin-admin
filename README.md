@@ -4,6 +4,11 @@
 ## Changelog
 
 
+### 2.0 (2018-10-05)
+
+Support of `pytsite-8.x`.
+
+
 ### 1.7.4 (2018-08-22)
 
 Removed unnecessary `hreflang` plugin usage.
