@@ -1,6 +1,6 @@
 {
   "name": "admin",
-  "version": "2.0",
+  "version": "2.0.1",
   "description": {
     "en": "Admin",
     "ru": "Admin",
@@ -14,11 +14,11 @@
   },
   "requires": {
     "pytsite": "8.x",
-    "plugins": [
-      "auth 3.x",
-      "auth_ui 4.x",
-      "permissions 1.x",
-      "robots_txt 1.x"
-    ]
+    "plugins": {
+      "auth": "3.x",
+      "auth_ui": "4.x",
+      "permissions": "1.x",
+      "robots_txt": "1.x"
+    }
   }
 }
