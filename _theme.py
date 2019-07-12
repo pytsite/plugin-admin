@@ -1,30 +1,29 @@
 """PytSite Admin Theme
 """
-
 __author__ = 'Oleksandr Shepetko'
 __email__ = 'a@shepetko.com'
 __license__ = 'MIT'
 
-from typing import Union as _Union
-from abc import ABC as _ABC, abstractmethod as _abstractmethod
-from pytsite import html as _html
+import htmler
+from typing import Union
+from abc import ABC, abstractmethod
 from . import _navbar, _sidebar
 
 
-class Theme(_ABC):
+class Theme(ABC):
 
     @property
-    @_abstractmethod
+    @abstractmethod
     def name(self) -> str:
         raise NotImplementedError()
 
     @property
-    @_abstractmethod
+    @abstractmethod
     def description(self) -> str:
         raise NotImplementedError()
 
-    @_abstractmethod
-    def render(self, navbar: _navbar.NavBar, sidebar: _sidebar.SideBar, content: _Union[str, _html.Element]) -> str:
+    @abstractmethod
+    def render(self, navbar: _navbar.NavBar, sidebar: _sidebar.SideBar, content: Union[str, htmler.Element]) -> str:
         """Render an admin page
         """
         raise NotImplementedError()

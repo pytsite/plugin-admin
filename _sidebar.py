@@ -4,10 +4,10 @@ __author__ = 'Oleksandr Shepetko'
 __email__ = 'a@shepetko.com'
 __license__ = 'MIT'
 
-import re as _re
-from typing import Union as _Union, Tuple as _Tuple
-from pytsite import util as _util, lang as _lang, events as _events, router as _router
-from plugins import auth as _auth
+import re
+from typing import Union, Tuple
+from pytsite import util, lang, events, router
+from plugins import auth
 from . import _api
 
 _permissions = []
@@ -21,7 +21,7 @@ class SideBar:
 
     @staticmethod
     def _check_permissions(path: str) -> bool:
-        user = _auth.get_current_user()
+        user = auth.get_current_user()
 
         if user.is_anonymous:
             return False
@@ -70,7 +70,7 @@ class SideBar:
         })
 
         self._menus[sid] = []
-        self._sections = _util.weight_sort(self._sections)
+        self._sections = util.weight_sort(self._sections)
 
     def get_menu(self, sid: str, mid: str) -> dict:
         """Get a menu of a section
@@ -84,8 +84,8 @@ class SideBar:
                 return m
 
     def add_menu(self, sid: str, mid: str, title: str, path: str = '#', icon: str = None, label: str = None,
-                 label_class: str = 'primary', weight: int = 0, roles: _Union[str, list, tuple] = ('admin', 'dev'),
-                 permissions: _Union[str, list, tuple] = None, replace=False):
+                 label_class: str = 'primary', weight: int = 0, roles: Union[str, list, tuple] = ('admin', 'dev'),
+                 permissions: Union[str, list, tuple] = None, replace=False):
         """Add a menu to a section
         """
         # Check if the section exists
@@ -120,14 +120,14 @@ class SideBar:
         }
 
         # Add data to permissions store
-        _permissions.append({
-            're': _re.compile(path),
+        permissions.append({
+            're': re.compile(path),
             'roles': roles,
             'permissions': permissions,
         })
 
-        _events.fire('admin@sidebar_add_menu', menu_data=menu_data)
-        _events.fire('admin@sidebar_add_menu.{}.{}'.format(sid, mid), menu_data=menu_data)
+        events.fire('admin@sidebar_add_menu', menu_data=menu_data)
+        events.fire('admin@sidebar_add_menu.{}.{}'.format(sid, mid), menu_data=menu_data)
 
         self._menus[sid].append(menu_data)
 
@@ -135,7 +135,7 @@ class SideBar:
         # Sorting by weight performs at this point
         # Sorting by title will be performed every time when menu is being rendered
         if section['sort_items_by'] == 'weight':
-            self._menus[sid] = _util.weight_sort(self._menus[sid])
+            self._menus[sid] = util.weight_sort(self._menus[sid])
 
     def del_menu(self, sid: str, mid: str):
         """Delete a menu from a section
@@ -152,8 +152,8 @@ class SideBar:
         self._menus[sid] = replace
 
     @property
-    def items(self) -> _Tuple[list, dict]:
-        current_path = _router.current_path()
+    def items(self) -> Tuple[list, dict]:
+        current_path = router.current_path()
         base_path = _api.base_path()
         menus = {}
 
@@ -167,7 +167,7 @@ class SideBar:
 
             # Sort items by translated title
             if section['sort_items_by'] == 'title':
-                menus[section['sid']] = sorted(menus[section['sid']], key=lambda x: _lang.t(x['title']))
+                menus[section['sid']] = sorted(menus[section['sid']], key=lambda x: lang.t(x['title']))
 
         # Remove empty sections
         sections = [s for s in self._sections if len(menus[s['sid']])]
