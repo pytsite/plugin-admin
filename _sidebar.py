@@ -120,7 +120,7 @@ class SideBar:
         }
 
         # Add data to permissions store
-        permissions.append({
+        _permissions.append({
             're': re.compile(path),
             'roles': roles,
             'permissions': permissions,

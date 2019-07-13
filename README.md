@@ -4,6 +4,11 @@
 ## Changelog
 
 
+### 2.1.1 (2019-07-13)
+
+Typo in code fixed.
+
+
 ### 2.1 (2019-07-12)
 
 Support of `pytsite-9.0`.
